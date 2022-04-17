@@ -1,11 +1,17 @@
 import "./GameBoard.css";
 import { useState } from "react";
+import Menu from "../Menu/Menu";
 
 const ROWS = 10;
 const COLS = 10;
 
 export default function GameBoard() {
     const [board, setBoard] = useState(generateInitialState());
+    const [symbol, setSymbol] = useState("X");
+
+    const resetGame = () => {
+        setBoard(generateInitialState());
+      };
 
     function generateInitialState() {
         const board = [];
@@ -22,7 +28,7 @@ export default function GameBoard() {
         const { row, col } = e.target.dataset;
         if (board[row][col] !== null) return;
         const newBoard = JSON.parse(JSON.stringify(board));
-        newBoard[row][col] = "X";
+        newBoard[row][col] = symbol;
         setBoard(newBoard);
     };
 
@@ -68,7 +74,8 @@ export default function GameBoard() {
 
     return (
         <>
-            <h2>GameBoard</h2>
+            <h2>Gomoku Game</h2>
+            <Menu resetGame={resetGame}/>
             {generateBoardJSX()}
         </>
     )

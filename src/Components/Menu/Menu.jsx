@@ -1,3 +1,5 @@
+import "./Menu.css";
+
 export default function Menu(props) {
     function handleNewGame() {
         props.resetGame();
@@ -5,7 +7,7 @@ export default function Menu(props) {
 
     return (
         <header className="header-menu">
-            <button onClick={handleNewGame}>New Game</button>
+            <button onClick={handleNewGame} className="new-game-btn">New Game</button>
         </header>
     )
 };
