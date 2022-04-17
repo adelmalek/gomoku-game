@@ -1,0 +1,17 @@
+.board {
+    border-collapse: collapse;
+}
+
+.cells {
+    border: 2px solid black;
+    width: 40px;
+    height: 40px;
+}
+
+.cells.empty {
+    cursor: pointer;
+}
+
+.cells.empty:hover {
+    background-color: lightgrey;
+}
