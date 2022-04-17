@@ -5,12 +5,19 @@ import Menu from "../Menu/Menu";
 const ROWS = 10;
 const COLS = 10;
 
+const transpose = (array) => {
+    return array[0].map((_, colIndex) => array.map(row => row[colIndex]));
+};
+
 export default function GameBoard() {
     const [board, setBoard] = useState(generateInitialState());
     const [symbol, setSymbol] = useState("X");
+    const [winner, setWinner] = useState(null);
 
     const resetGame = () => {
         setBoard(generateInitialState());
+        setSymbol("X");
+        setWinner(null);
       };
 
     function generateInitialState() {
@@ -24,19 +31,81 @@ export default function GameBoard() {
         return board;
     };
 
+    function getWinnerInRow(row) {
+        let symbolCount = 0;
+        for (let cell of row) {
+            if (cell === symbol) {
+                symbolCount +=1;
+            } else {
+                symbolCount = 0;
+            }
+            if (symbolCount === 5) {
+                return symbol;
+            }
+        }
+        return null;
+    };
+
+    function getWinnerInRowList(board) {
+        for (let row of board) {
+            const winner = getWinnerInRow(row);
+            if (winner !== null) {
+                return winner;
+            }
+        }
+        return null;
+    };
+
+    function getDiagonal(board, x, y) {
+        let diag = [];
+        while (Array.isArray(board[x]) && typeof board[x][y] !== "undefined") {
+            diag.push(board[x][y]);
+            x += 1;
+            y += 1;
+        };
+        return diag;
+    };
+
+    function getWinner(board) {
+        let boardTransposed = transpose(board);
+        let boardReversed = board.map(row => [...row].reverse());
+        
+        let diaglist = [
+            ...board, //vertical
+            ...boardTransposed //horizontal
+        ];
+
+        diaglist.push(getDiagonal(board, 0, 0)); // main diagonal
+        diaglist.push(getDiagonal(boardReversed, 0, 0)); // 'cross diagonal'
+
+        let maxLen = Math.max(ROWS, COLS);
+        for (let i = 1; i < maxLen; i++) {
+            diaglist.push(getDiagonal(board, i, 0));
+            diaglist.push(getDiagonal(board, 0, i));
+            diaglist.push(getDiagonal(boardReversed, i, 0));
+            diaglist.push(getDiagonal(boardReversed, 0, i));
+        };
+
+        diaglist = diaglist.filter(diag => diag.length >= 5);
+
+        return getWinnerInRowList(diaglist);
+    };
+
     const handleCellClick = (e) => {
         const { row, col } = e.target.dataset;
-        if (board[row][col] !== null) return;
+        if (board[row][col] !== null || winner !== null) return;
         const newBoard = JSON.parse(JSON.stringify(board));
         newBoard[row][col] = symbol;
+        setWinner(getWinner(newBoard));
         setBoard(newBoard);
+        setSymbol(symbol === "X" ? "O" : "X");
     };
 
     function generateRowJsx(row, rowIndex) {
         const cells = [];
         for (let i = 0; i < board.length; i++) {
             let classList = "cells";
-            if (row[i] === null) {
+            if (row[i] === null && winner === null) {
                 classList += " empty";
             }
             cells.push(
@@ -76,6 +145,7 @@ export default function GameBoard() {
         <>
             <h2>Gomoku Game</h2>
             <Menu resetGame={resetGame}/>
+            Winner: {winner}
             {generateBoardJSX()}
         </>
     )
