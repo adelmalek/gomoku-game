@@ -17,10 +17,10 @@
     user-select: none;
 }
 
-.cells.empty {
+.empty {
     cursor: pointer;
 }
 
-.cells.empty:hover {
+.empty:hover {
     background-color: lightgrey;
 }
