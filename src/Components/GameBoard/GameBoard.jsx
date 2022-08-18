@@ -2,8 +2,8 @@ import "./GameBoard.css";
 import { useState } from "react";
 import Menu from "../Menu/Menu";
 
-const ROWS = 20;
-const COLS = 20;
+const ROWS = 15;
+const COLS = 15;
 
 //row -> column
 const transpose = (array) => {
@@ -143,10 +143,10 @@ export default function GameBoard() {
     };
 
     return (
-        <div className="gameboard-container">
+        <div className="gameboard">
             <h2>Gomoku Game</h2>
             <Menu reset={reset}/>
-            <h3>Winner: {winner}</h3>
+            <h3>⭐The Winner Is⭐: {winner}</h3>
             {createBoardJSX()}
         </div>
     )
