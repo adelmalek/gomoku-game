@@ -2,4 +2,5 @@
 
 - React app
 - Three players compete against each other
-- Link:  https://geradele.github.io/gomoku-game/
+- Link:  https://adelmalek.github.io/gomoku-game/
+
